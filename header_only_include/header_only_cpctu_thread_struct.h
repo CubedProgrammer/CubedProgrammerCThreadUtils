@@ -1,8 +1,11 @@
 #ifndef __cplusplus
 #ifndef Included_header_only_cpctu_thread_struct_h
 #define Included_header_only_cpctu_thread_struct_h
+#ifdef _WIN32
 #include<synchapi.h>
 #include<winnt.h>
+#elif defined __linux__
+#endif
 #include<cpctu_thread_struct.h>
 struct thsocpctu
 {
