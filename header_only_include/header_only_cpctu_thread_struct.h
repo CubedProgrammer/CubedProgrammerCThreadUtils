@@ -4,7 +4,9 @@
 #ifdef _WIN32
 #include<synchapi.h>
 #include<winnt.h>
+typedef unsigned(*cpctu_func_type)(void*);
 #elif defined __linux__
+typedef void*(*cpctu_func_type)(void*);
 #endif
 #include<cpctu_thread_struct.h>
 struct thsocpctu
@@ -15,6 +17,23 @@ struct thsocpctu
 	pthread_t th;
 #endif
 };
+#ifdef _WIN32
+unsigned
+#elif defined __linux__
+cpctu_arg_type
+#endif
+func_to_call(cpctu_arg_type arg)
+{
+	cpctu_arg_type *aa = arg;
+	// actual function to be called
+	cpctu_func_type *aftbc = ++aa;
+	(*aftbc)(--aa);
+#ifdef _WIN32
+	return 0;
+#elif defined __linux__
+	return NULL;
+#endif
+}
 cpctu_thread cpctu_create_thread(void(*ftc)(cpctu_arg_type), cpctu_arg_type arg)
 {
 	cpctu_thread th = malloc(sizeof(cpctu_thread));
