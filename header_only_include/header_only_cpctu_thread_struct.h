@@ -4,9 +4,7 @@
 #ifdef _WIN32
 #include<synchapi.h>
 #include<winnt.h>
-typedef unsigned(*cpctu_func_type)(void*);
 #elif defined __linux__
-typedef void*(*cpctu_func_type)(void*);
 #endif
 #include<cpctu_thread_struct.h>
 struct thsocpctu
@@ -16,6 +14,7 @@ struct thsocpctu
 #elif defined __linux__
 	pthread_t th;
 #endif
+	cpctu_arg_type aarg;
 };
 #ifdef _WIN32
 unsigned
@@ -26,7 +25,7 @@ func_to_call(cpctu_arg_type arg)
 {
 	cpctu_arg_type *aa = arg;
 	// actual function to be called
-	cpctu_func_type *aftbc = ++aa;
+	cpctu_func_type *aftbc = (cpctu_func_type*)++aa;
 	(*aftbc)(--aa);
 #ifdef _WIN32
 	return 0;
@@ -34,13 +33,20 @@ func_to_call(cpctu_arg_type arg)
 	return NULL;
 #endif
 }
-cpctu_thread cpctu_create_thread(void(*ftc)(cpctu_arg_type), cpctu_arg_type arg)
+cpctu_thread cpctu_create_thread(cpctu_func_type ftc, cpctu_arg_type arg)
 {
 	cpctu_thread th = malloc(sizeof(cpctu_thread));
+	th->aarg = malloc(sizeof(cpctu_func_type*) + sizeof(cpctu_arg_type));
+	// pointer to arg and pointer to func
+	void **pta = (void**)th->aarg;
+	cpctu_func_type *ptf = (cpctu_func_type*)(pta + 1);
+
+	*pta = arg;
+	*ptf = ftc;
 #ifdef _WIN32
-	th->th = _beginthread(ftc, 0, arg);
+	th->th = _beginthreadex(NULL, 0, &func_to_call, th->aarg, 0, NULL);
 #elif defined __linux__
-	pthread_create(th, NULL, ftc, arg);
+	pthread_create(&func_to_call, NULL, ftc, th->aarg);
 #endif
 	return th;
 }

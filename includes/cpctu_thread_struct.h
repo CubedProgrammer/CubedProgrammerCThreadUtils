@@ -12,5 +12,6 @@ struct thsocpctu *cpctu_create_thread(void(*ftc)(void *), void *arg);
 void cpctu_join_thread(struct thsocpctu *th);
 typedef struct thsocpctu*cpctu_thread;
 typedef void*cpctu_arg_type;
+typedef void(*cpctu_func_type)(void*);
 #endif
 #endif
