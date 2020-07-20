@@ -1,6 +1,7 @@
 #ifndef __cplusplus
 #ifndef Included_cpctu_thread_struct_h
 #define Included_cpctu_thread_struct_h
+#include<stdlib.h>
 #ifdef _WIN32
 #include <process.h>
 #elif defined __linux__
