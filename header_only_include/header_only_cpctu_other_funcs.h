@@ -2,6 +2,20 @@
 #ifndef Included_header_only_cpctu_other_funcs_h
 #define Included_header_only_cpctu_other_funcs_h
 #include<cpctu_other_funcs.h>
+#ifdef _WIN32
+#include<synchapi.h>
+#elif defined __linux__
+#include<unistd.h>
+#endif
+void cpctu_sleep_thread(int millis)
+{
+#ifdef _WIN32
+	Sleep(millis);
+#elif defined __linux__
+	usleep(millis * 1000);
+#endif
+}
+
 // cpctu fork helper
 struct cfh
 {
