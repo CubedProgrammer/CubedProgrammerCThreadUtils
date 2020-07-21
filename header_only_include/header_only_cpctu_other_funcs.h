@@ -30,6 +30,10 @@ void cpctu_init_fork(void)
 	fcfh->prev = NULL;
 	fcfh->th = NULL;
 }
+int cpctu_fork_status(void)
+{
+	return fcfh ? 0 : 1;
+}
 // initial function to call, fork function, inital function arg, fork function arg
 // calls the initial function, when it returns, the fork function is called on a different thread
 void cpctu_thread_fork(cpctu_func_type iftc, cpctu_func_type ff, cpctu_arg_type ifa, cpctu_arg_type ffa)
