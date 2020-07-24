@@ -4,7 +4,7 @@
 #ifdef _WIN32
 #include<synchapi.h>
 #include<winnt.h>
-#elif defined __linux__
+//#elif defined __linux__
 #endif
 #include<cpctu_thread_struct.h>
 struct thsocpctu
