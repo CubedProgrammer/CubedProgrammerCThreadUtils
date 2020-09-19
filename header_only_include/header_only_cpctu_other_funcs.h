@@ -25,7 +25,7 @@ struct cfh
 };
 
 // first cpctu fork helper
-struct cfh * volatile cpctu____glv__fcfh;
+struct cfh *cpctu____glv__fcfh;
 // fork status
 volatile int cpctu____glv__fs = 1;
 
