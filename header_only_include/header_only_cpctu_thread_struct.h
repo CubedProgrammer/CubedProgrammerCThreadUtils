@@ -4,9 +4,12 @@
 #ifdef _WIN32
 #include<synchapi.h>
 #include<winnt.h>
-//#elif defined __linux__
+#elif defined __linux__
+#include<pthread.h>
 #endif
 #include<cpctu_thread_struct.h>
+
+// struct for threads
 struct thsocpctu
 {
 #ifdef _WIN32
@@ -16,12 +19,16 @@ struct thsocpctu
 #endif
 	cpctu_arg_type aarg;
 };
+
+// determines return type of the function
 #ifdef _WIN32
 unsigned
 #elif defined __linux__
 cpctu_arg_type
 #endif
-func_to_call(cpctu_arg_type arg)
+
+// function for thread to call
+cpctu____func_to_call(cpctu_arg_type arg)
 {
 	cpctu_arg_type *aa = arg;
 	// actual function to be called
@@ -33,6 +40,8 @@ func_to_call(cpctu_arg_type arg)
 	return NULL;
 #endif
 }
+
+// creates a thread
 cpctu_thread cpctu_create_thread(cpctu_func_type ftc, cpctu_arg_type arg)
 {
 	cpctu_thread th = malloc(sizeof(cpctu_thread));
@@ -44,12 +53,14 @@ cpctu_thread cpctu_create_thread(cpctu_func_type ftc, cpctu_arg_type arg)
 	*pta = arg;
 	*ptf = ftc;
 #ifdef _WIN32
-	th->th = _beginthreadex(NULL, 0, &func_to_call, th->aarg, 0, NULL);
+	th->th = _beginthreadex(NULL, 0, &cpctu____func_to_call, th->aarg, 0, NULL);
 #elif defined __linux__
-	pthread_create(&func_to_call, NULL, ftc, th->aarg);
+	pthread_create(&th->th, NULL, cpctu____func_to_call, th->aarg);
 #endif
 	return th;
 }
+
+// joins a thread
 void cpctu_join_thread(cpctu_thread th)
 {
 #ifdef _WIN32
