@@ -33,7 +33,7 @@ cpctu____func_to_call(cpctu_arg_type arg)
 	cpctu_arg_type *aa = arg;
 	// actual function to be called
 	cpctu_func_type *aftbc = (cpctu_func_type*)++aa;
-	(*aftbc)(--aa);
+	(*aftbc)(*--aa);
 #ifdef _WIN32
 	return 0;
 #elif defined __linux__
@@ -45,9 +45,10 @@ cpctu____func_to_call(cpctu_arg_type arg)
 cpctu_thread cpctu_create_thread(cpctu_func_type ftc, cpctu_arg_type arg)
 {
 	cpctu_thread th = malloc(sizeof(cpctu_thread));
-	th->aarg = malloc(sizeof(cpctu_func_type*) + sizeof(cpctu_arg_type));
+	th->aarg = malloc(sizeof(cpctu_func_type) + sizeof(cpctu_arg_type));
 	// pointer to arg and pointer to func
 	void **pta = (void**)th->aarg;
+	int i = 0;
 	cpctu_func_type *ptf = (cpctu_func_type*)(pta + 1);
 
 	*pta = arg;
