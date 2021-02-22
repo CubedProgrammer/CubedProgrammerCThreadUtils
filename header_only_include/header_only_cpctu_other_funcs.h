@@ -1,7 +1,8 @@
+
 #ifndef __cplusplus
 #ifndef Included_header_only_cpctu_other_funcs_h
 #define Included_header_only_cpctu_other_funcs_h
-#include<cpctu_other_funcs.h>
+#include"../include/cpctu_other_funcs.h"
 #ifdef _WIN32
 #include<synchapi.h>
 #elif defined __linux__

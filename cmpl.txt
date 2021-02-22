@@ -1,3 +1,3 @@
-gcc -Iheader_only_include -Iincludes -O3 -c -o src/cpctu_other_funcs.o src/cpctu_other_funcs.c
-gcc -Iheader_only_include -Iincludes -O3 -c -o src/cpctu_thread_struct.o src/cpctu_thread_struct.c
-gcc -shared -o libCubedProgrammerCThreadUtils.dll/so src/cpctu_other_funcs.o src/cpctu_thread_struct.o
+gcc -Iheader_only_include -Iincludes -O3 -c -o src/cpctu_other_funcs.o src/cpctu_other_funcs.c -fPIC
+gcc -Iheader_only_include -Iincludes -O3 -c -o src/cpctu_thread_struct.o src/cpctu_thread_struct.c -fPIC
+gcc -shared -o libcpctu.so src/cpctu_other_funcs.o src/cpctu_thread_struct.o

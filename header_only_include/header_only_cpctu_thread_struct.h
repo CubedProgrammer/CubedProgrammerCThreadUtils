@@ -1,3 +1,4 @@
+
 #ifndef __cplusplus
 #ifndef Included_header_only_cpctu_thread_struct_h
 #define Included_header_only_cpctu_thread_struct_h
@@ -7,7 +8,7 @@
 #elif defined __linux__
 #include<pthread.h>
 #endif
-#include<cpctu_thread_struct.h>
+#include"../include/cpctu_thread_struct.h"
 
 // struct for threads
 struct thsocpctu
