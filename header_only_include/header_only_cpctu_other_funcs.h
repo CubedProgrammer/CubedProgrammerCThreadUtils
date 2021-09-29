@@ -3,7 +3,7 @@
 #define Included_header_only_cpctu_other_funcs_h
 #include<cpctu_other_funcs.h>
 #ifdef _WIN32
-#include<synchapi.h>
+#include<windows.h>
 #elif defined __linux__
 #include<unistd.h>
 #endif

@@ -2,8 +2,7 @@
 #ifndef Included_header_only_cpctu_thread_struct_h
 #define Included_header_only_cpctu_thread_struct_h
 #ifdef _WIN32
-#include<synchapi.h>
-#include<winnt.h>
+#include<windows.h>
 #elif defined __linux__
 #include<pthread.h>
 #endif
@@ -48,7 +47,6 @@ cpctu_thread cpctu_create_thread(cpctu_func_type ftc, cpctu_arg_type arg)
 	th->aarg = malloc(sizeof(cpctu_func_type) + sizeof(cpctu_arg_type));
 	// pointer to arg and pointer to func
 	void **pta = (void**)th->aarg;
-	int i = 0;
 	cpctu_func_type *ptf = (cpctu_func_type*)(pta + 1);
 
 	*pta = arg;
