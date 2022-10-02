@@ -4,7 +4,7 @@
 #include<cpctu_other_funcs.h>
 #ifdef _WIN32
 #include<windows.h>
-#elif defined __linux__
+#elif defined __unix__ || defined __APPLE__
 #include<unistd.h>
 #endif
 
@@ -13,8 +13,21 @@ void cpctu_sleep_thread(int millis)
 {
 #ifdef _WIN32
 	Sleep(millis);
-#elif defined __linux__
+#else
 	usleep(millis * 1000);
+#endif
+}
+
+// sleep with nanosecond precision
+void cpctu_nanosleep_thread(long nanos)
+{
+#ifdef _WIN32
+	Sleep((nanos + 999999) / 1000000);
+#else
+	struct timespec ts;
+	ts.tv_sec = nanos / 1000000000;
+	ts.tv_nsec = nanos % 1000000000;
+	nanosleep(&ts, NULL);
 #endif
 }
 

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #ifdef _WIN32
 #include <process.h>
-#elif defined __linux__
+#elif defined __unix__ || defined __APPLE__
 #include <pthread.h>
 #endif
 // thread struct of cpctu

@@ -3,7 +3,7 @@
 #define Included_header_only_cpctu_thread_struct_h
 #ifdef _WIN32
 #include<windows.h>
-#elif defined __linux__
+#elif defined __unix__ || defined __APPLE__
 #include<pthread.h>
 #endif
 #include<cpctu_thread_struct.h>
@@ -13,7 +13,7 @@ struct thsocpctu
 {
 #ifdef _WIN32
 	uintptr_t th;
-#elif defined __linux__
+#elif defined __unix__ || defined __APPLE__
 	pthread_t th;
 #endif
 	cpctu_arg_type aarg;
@@ -22,7 +22,7 @@ struct thsocpctu
 // determines return type of the function
 #ifdef _WIN32
 unsigned
-#elif defined __linux__
+#elif defined __unix__ || defined __APPLE__
 cpctu_arg_type
 #endif
 
@@ -35,7 +35,7 @@ cpctu____func_to_call(cpctu_arg_type arg)
 	(*aftbc)(*--aa);
 #ifdef _WIN32
 	return 0;
-#elif defined __linux__
+#elif defined __unix__ || defined __APPLE__
 	return NULL;
 #endif
 }
@@ -53,7 +53,7 @@ cpctu_thread cpctu_create_thread(cpctu_func_type ftc, cpctu_arg_type arg)
 	*ptf = ftc;
 #ifdef _WIN32
 	th->th = _beginthreadex(NULL, 0, &cpctu____func_to_call, th->aarg, 0, NULL);
-#elif defined __linux__
+#elif defined __unix__ || defined __APPLE__
 	pthread_create(&th->th, NULL, cpctu____func_to_call, th->aarg);
 #endif
 	return th;
@@ -66,7 +66,7 @@ void cpctu_join_thread(cpctu_thread th)
 	// handle to windows thread
 	HANDLE htwth = (HANDLE)th->th;
 	WaitForSingleObject(htwth, 0xffffffff);
-#elif defined __linux__
+#elif defined __unix__ || defined __APPLE__
 	pthread_join(th->th, NULL);
 #endif
 }
