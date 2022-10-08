@@ -10,6 +10,7 @@
 // thread struct of cpctu
 struct thsocpctu;
 struct thsocpctu *cpctu_create_thread(void(*ftc)(void *), void *arg);
+void cpctu_detach(struct thsocpctu *th);
 void cpctu_join_thread(struct thsocpctu *th);
 // typedefs
 typedef struct thsocpctu*cpctu_thread;

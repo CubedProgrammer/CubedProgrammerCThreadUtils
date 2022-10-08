@@ -59,6 +59,16 @@ cpctu_thread cpctu_create_thread(cpctu_func_type ftc, cpctu_arg_type arg)
 	return th;
 }
 
+// detach thread
+void cpctu_detach(struct thsocpctu *th)
+{
+#ifdef _WIN32
+	CloseHandle(th->th)
+#elif defined __unix__ || defined __APPLE__
+	pthread_detach(th->th);
+#endif
+}
+
 // joins a thread
 void cpctu_join_thread(cpctu_thread th)
 {
