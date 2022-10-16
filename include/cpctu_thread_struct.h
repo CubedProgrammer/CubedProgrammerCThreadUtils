@@ -9,12 +9,13 @@
 #endif
 // thread struct of cpctu
 struct thsocpctu;
-struct thsocpctu *cpctu_create_thread(void(*ftc)(void *), void *arg);
-void cpctu_detach(struct thsocpctu *th);
-void cpctu_join_thread(struct thsocpctu *th);
 // typedefs
 typedef struct thsocpctu*cpctu_thread;
 typedef void*cpctu_arg_type;
 typedef void(*cpctu_func_type)(void*);
+// functions
+cpctu_thread cpctu_create_thread(void(*ftc)(void *), void *arg);
+void cpctu_detach(cpctu_thread th);
+void cpctu_join_thread(cpctu_thread th);
 #endif
 #endif

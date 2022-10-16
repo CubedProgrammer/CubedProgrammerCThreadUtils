@@ -52,7 +52,7 @@ cpctu_thread cpctu_create_thread(cpctu_func_type ftc, cpctu_arg_type arg)
 	*pta = arg;
 	*ptf = ftc;
 #ifdef _WIN32
-	th->th = _beginthreadex(NULL, 0, &cpctu____func_to_call, th->aarg, 0, NULL);
+	th->th = _beginthreadex(NULL, 0, cpctu____func_to_call, th->aarg, 0, NULL);
 #elif defined __unix__ || defined __APPLE__
 	pthread_create(&th->th, NULL, cpctu____func_to_call, th->aarg);
 #endif
@@ -70,7 +70,7 @@ void cpctu_detach(struct thsocpctu *th)
 }
 
 // joins a thread
-void cpctu_join_thread(cpctu_thread th)
+void cpctu_join_thread(struct thsocpctu *th)
 {
 #ifdef _WIN32
 	// handle to windows thread
