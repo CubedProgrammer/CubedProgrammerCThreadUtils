@@ -4,6 +4,8 @@
 #include<cpctu_thread_struct.h>
 void cpctu_sleep_thread(int millis);
 void cpctu_nanosleep_thread(long nanos);
+int cpctu_count_threads(void);
+int cpctu_available_threads(void);
 void cpctu_init_fork(void);
 int cpctu_fork_status(void);
 void cpctu_thread_fork(cpctu_func_type iftc, cpctu_func_type ff, cpctu_arg_type ifa, cpctu_arg_type ffa);

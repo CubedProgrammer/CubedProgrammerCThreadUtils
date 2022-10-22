@@ -5,8 +5,11 @@
 #ifdef _WIN32
 #include<windows.h>
 #elif defined __unix__ || defined __APPLE__
+#include<dirent.h>
+#include<sys/sysinfo.h>
 #include<unistd.h>
 #endif
+#include<stdio.h>
 
 // sleeps the thread
 void cpctu_sleep_thread(int millis)
@@ -28,6 +31,52 @@ void cpctu_nanosleep_thread(long nanos)
 	ts.tv_sec = nanos / 1000000000;
 	ts.tv_nsec = nanos % 1000000000;
 	nanosleep(&ts, NULL);
+#endif
+}
+
+// count number of threads being used by the current process
+int cpctu_count_threads(void)
+{
+	int cnt = 0;
+#ifdef _WIN32
+	THREADENTRY32 then, *thenp = &then;
+	HANDLE hand = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
+	if(Thread32First(hand, thenp))
+	{
+		do
+			++cnt;
+		while(Thread32Next(hand, thenp));
+	}
+	else
+		cnt = -1;
+#else
+	DIR *dirp = opendir("/proc/self/task");
+	if(dirp == NULL)
+		cnt = -1;
+	else
+	{
+		cnt = -2;
+		struct dirent *en = readdir(dirp);
+		while(en)
+		{
+			++cnt;
+			en = readdir(dirp);
+		}
+		closedir(dirp);
+	}
+#endif
+	return cnt;
+}
+
+// Get available threads in the computer, threads used by process do not affect this number
+int cpctu_available_threads(void)
+{
+#ifdef _WIN32
+	SYSTEM_INFO si;
+	GetSystemInfo(&si);
+	return si.dwNumberOfProcessors;
+#else
+	return get_nprocs();
 #endif
 }
 
