@@ -67,6 +67,7 @@ void cpctu_detach(struct thsocpctu *th)
 #elif defined __unix__ || defined __APPLE__
 	pthread_detach(th->th);
 #endif
+	free(th);
 }
 
 // joins a thread
@@ -79,6 +80,7 @@ void cpctu_join_thread(struct thsocpctu *th)
 #elif defined __unix__ || defined __APPLE__
 	pthread_join(th->th, NULL);
 #endif
+	free(th);
 }
 #endif
 #endif
