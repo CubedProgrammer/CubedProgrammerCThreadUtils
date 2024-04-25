@@ -27,7 +27,7 @@ char cpctu_valid_mutex(cpctu_mutex m)
 void cpctu_destroy_mutex(cpctu_mutex m)
 {
 #ifdef _WIN32
-	ReleaseMutex(m);
+	CloseHandle(m);
 #else
 	pthread_mutex_destroy(m);
 	free(m);
