@@ -37,22 +37,88 @@ int cpctu_init_pool(cpctu_pool *pool, unsigned cnt)
 	cpctu_condition_variable *cv;
 	int big = cnt > CPCTU_SMALL_POOL_SIZE;
 	int succ = -1;
+	char allsucc = 1;
 	pool->runcv = cpctu_create_cv();
-	if(pool->runcv)
+	if(pool->runcv == NULL)
+		goto final;
+	pool->runm = cpctu_create_mutex();
+	if(pool->runm == NULL)
+		goto penultimate;
+	if(big)
 	{
-		pool->runm = cpctu_create_mutex();
-		if(pool->runm)
-		{
-			char allsucc = 1;
-			if(big)
-			{
-				th = pool->th.big = malloc(cnt * sizeof(*pool->th.big));
-				allsucc = pool->th.big != NULL;
-			}
-			else
-				th = pool->th.small;
-		}
+		pool->fini.big = malloc(cnt * sizeof(*pool->fini.big));
+		allsucc = pool->cv.big != NULL;
 	}
+	if(!allsucc)
+		goto finiarr;
+	if(big)
+	{
+		cv = pool->cv.big = malloc(cnt * sizeof(*pool->cv.big));
+		allsucc = pool->cv.big != NULL;
+	}
+	else
+		cv = pool->cv.small;
+	for(unsigned i = 0; allsucc && i < cnt; ++i)
+	{
+		cv[i] = cpctu_create_cv();
+		allsucc = cv[i] != NULL;
+	}
+	if(!allsucc)
+		goto cvarr;
+	if(big)
+	{
+		m = pool->m.big = malloc(cnt * sizeof(*pool->m.big));
+		allsucc = pool->m.big != NULL;
+	}
+	else
+		m = pool->m.small;
+	for(unsigned i = 0; allsucc && i < cnt; ++i)
+	{
+		m[i] = cpctu_create_mutex();
+		allsucc = m[i] != NULL;
+	}
+	if(!allsucc)
+		goto marr;
+	if(big)
+	{
+		th = pool->th.big = malloc(cnt * sizeof(*pool->th.big));
+		allsucc = pool->th.big != NULL;
+	}
+	else
+		th = pool->th.small;
+	for(unsigned i = 0; allsucc && i < cnt; ++i)
+	{
+		//th[i] = cpctu_create_thread();
+		allsucc = th[i] != NULL;
+	}
+	if(allsucc)
+		succ = 0;
+	if(succ)
+	{
+		for(unsigned i = 0; i < cnt; ++i)
+		{
+			if(m[i] != NULL)
+				cpctu_destroy_mutex(m[i]);
+		}
+		if(big)
+			free(m);
+		marr:
+		for(unsigned i = 0; i < cnt; ++i)
+		{
+			if(cv[i] != NULL)
+				cpctu_destroy_cv(cv[i]);
+		}
+		if(big)
+			free(cv);
+		cvarr:
+		if(big)
+			free(pool->fini.big);
+		finiarr:
+		cpctu_destroy_mutex(pool->runm);
+		penultimate:
+		cpctu_destroy_cv(pool->runcv);
+	}
+	final:
 	return succ;
 }
 
